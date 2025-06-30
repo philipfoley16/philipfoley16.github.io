@@ -225,7 +225,7 @@
                               // Example: London
                               const latitude = 21.0285;
                               const longitude = 105.8542;
-                              const targetDate = "2025-08-08"; // YYYY-MM-DD
+                              const targetDate = "2025-07-08"; // YYYY-MM-DD
                             
                               fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&timezone=auto&start_date=${targetDate}&end_date=${targetDate}`)
                                 .then(response => response.json())
