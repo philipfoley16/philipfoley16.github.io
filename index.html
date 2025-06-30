@@ -523,10 +523,7 @@
             function initVietnamMap() {
               if (mapInitialized) return;
               mapInitialized = true;
-              var map = L.map('vietnam-map').setView([16.0471, 108.2068], 6);
-              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              }).addTo(map);
+              var map = L.map('vietnam-map').setView([16.0471, 108.2068], 10);
               var locations = [
                 { name: "Hanoi", lat: 21.0285, lng: 105.8542 },
                 { name: "Ha Giang", lat: 22.8233, lng: 104.9836 },
