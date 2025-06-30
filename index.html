@@ -34,18 +34,6 @@
         .content-section.active {
             display: block;
         }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: -0.5rem;
-            transform: translateX(-50%);
-            width: 1rem;
-            height: 1rem;
-            background-color: #f97316; /* orange-500 */
-            border-radius: 9999px;
-            border: 2px solid #f8fafc;
-        }
         .chart-container {
             position: relative;
             width: 100%;
@@ -64,6 +52,67 @@
           min-height: 400px;
           height: 500px;
           z-index: 1;
+        }
+         /* Timeline specific styles */
+        .timeline-point {
+            position: absolute;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%; /* Occupy height of the bar for vertical centering of dot */
+            transform: translateX(-50%); /* Default: Center point over its 'left' percentage */
+        }
+
+        .timeline-point .timeline-dot {
+            width: 1rem;
+            height: 1rem;
+            background-color: #f97316; /* orange-500 */
+            border-radius: 9999px;
+            border: 2px solid #f8fafc;
+            z-index: 10;
+            position: absolute; /* positioned relative to timeline-point */
+            top: 50%; /* center on the bar */
+            transform: translateY(-50%);
+        }
+
+        .timeline-point .timeline-label {
+            position: absolute;
+            top: calc(100% + 0.5rem); /* Position below the bar with 0.5rem margin */
+            text-align: center;
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 500; /* font-medium */
+            white-space: nowrap; /* text-nowrap */
+            color: #475569; /* slate-700 */
+            /* Default: Centered relative to its own left edge, adjusted by parent transform */
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Adjust label positioning for first and last items to prevent overflowing the page */
+        .timeline-point:first-child {
+            transform: translateX(0); /* Don't translate the container, align its left edge with 0% */
+        }
+        .timeline-point:first-child .timeline-label {
+            left: 0;
+            transform: translateX(0); /* Align text with the start of the overall bar */
+        }
+        .timeline-point:first-child .timeline-dot {
+            left: 0;
+            transform: translate(-50%, -50%); /* Center dot over the 0% mark */
+        }
+
+        .timeline-point:last-child {
+            transform: translateX(0); /* Don't translate the container, align its right edge with 100% */
+        }
+        .timeline-point:last-child .timeline-label {
+            left: 100%;
+            transform: translateX(-100%); /* Align text with the end of the overall bar */
+        }
+         .timeline-point:last-child .timeline-dot {
+            right: 0;
+            transform: translate(50%, -50%); /* Center dot over the 100% mark */
         }
     </style>
 </head>
@@ -120,21 +169,40 @@
                         </div>
                     </div>
                     
-                    <div class="mt-12" stlye="margin-bottom: 2rem">
+                    <div class="mt-12">
                          <h3 class="text-xl font-semibold text-slate-800 mb-6 text-center">Visual Trip Timeline</h3>
-                         <div class="w-full bg-slate-200 rounded-full h-2.5 relative">
-                             <div class="bg-teal-600 h-2.5 rounded-full" style="width: 100%"></div>
-                             <div class="absolute flex justify-between w-full top-0">
-                                 <div class="timeline-item relative" style="left: 5%;"><span class="absolute top-6 -translate-x-1/2 text-xs font-medium">Hanoi</span></div>
-                                 <div class="timeline-item relative" style="left: 25%;"><span class="absolute top-6 -translate-x-1/2 text-xs font-medium">Ha Giang</span></div>
-                                 <div class="timeline-item relative" style="left: 45%;"><span class="absolute top-6 -translate-x-1/2 text-xs font-medium">Halong Bay</span></div>
-                                 <div class="timeline-item relative" style="left: 65%;"><span class="absolute top-6 -translate-x-1/2 text-xs font-medium">Hoi An</span></div>
-                                 <div class="timeline-item relative" style="left: 90%;"><span class="absolute top-6 -translate-x-1/2 text-xs font-medium">HCMC</span></div>
-                             </div>
-                         </div>
+                         <div class="relative w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-teal-600 h-2.5 rounded-full" style="width: 100%"></div>
+                            
+                            <!-- Markers and labels -->
+                            <div class="absolute inset-x-0 top-0 bottom-0 flex justify-between px-1">
+                                <div class="timeline-point left-[0%]">
+                                    <span class="timeline-dot"></span>
+                                    <span class="timeline-label">Hanoi</span>
+                                </div>
+                                <div class="timeline-point left-[25%]">
+                                    <span class="timeline-dot"></span>
+                                    <span class="timeline-label">Ha Giang</span>
+                                </div>
+                                <div class="timeline-point left-[45%]">
+                                    <span class="timeline-dot"></span>
+                                    <span class="timeline-label">Halong Bay</span>
+                                </div>
+                                <div class="timeline-point left-[65%]">
+                                    <span class="timeline-dot"></span>
+                                    <span class="timeline-label">Hoi An</span>
+                                </div>
+                                <div class="timeline-point left-[100%]">
+                                    <span class="timeline-dot"></span>
+                                    <span class="timeline-label">HCMC</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                 <div id="vietnam-map" style="width: 100%; height: 500px; margin-top: 2rem;">
                 </div>
+                    
                 </div>
             </section>
 
