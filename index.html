@@ -490,6 +490,57 @@
     </div>
 
     <script>
+            async function callGeminiAPI(prompt) {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        console.error("Unexpected API response structure:", result);
+                        return "Could not generate content.";
+                    }
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    return "Error generating content. Please try again.";
+                }
+            }
+
+            async function generateDailyHighlight(buttonElement) {
+                const card = buttonElement.closest('.bg-white');
+                const location = card.dataset.location;
+                const activities = card.dataset.activities;
+                const highlightOutputDiv = card.querySelector('.generated-highlight');
+
+                highlightOutputDiv.textContent = 'Generating highlight...';
+
+                const prompt = `Give me a single, exciting highlight for a day visiting ${location} and doing ${activities}. Keep it very concise, under 20 words, and start with an action verb.`;
+                const highlight = await callGeminiAPI(prompt);
+                highlightOutputDiv.textContent = highlight;
+            }
+
+            async function generateCulturalInsight(region, outputDivId) {
+                const outputDiv = document.getElementById(outputDivId);
+                outputDiv.classList.remove('hidden');
+                outputDiv.textContent = 'Generating cultural insight...';
+
+                const prompt = `Provide one concise cultural tip or etiquette guideline for travelers in ${region} of Vietnam. Focus on something practical and under 30 words.`;
+                const insight = await callGeminiAPI(prompt);
+                outputDiv.textContent = insight;
+            }
+        
         document.addEventListener('DOMContentLoaded', function () {
             const tabNavigation = document.getElementById('tab-navigation');
             const contentSections = document.getElementById('tab-content').querySelectorAll('.content-section');
@@ -564,57 +615,6 @@
                         cutout: '60%'
                     }
                 });
-            }
-
-            async function callGeminiAPI(prompt) {
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-                const payload = { contents: chatHistory };
-                const apiKey = "";
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    const result = await response.json();
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        return result.candidates[0].content.parts[0].text;
-                    } else {
-                        console.error("Unexpected API response structure:", result);
-                        return "Could not generate content.";
-                    }
-                } catch (error) {
-                    console.error("Error calling Gemini API:", error);
-                    return "Error generating content. Please try again.";
-                }
-            }
-
-            async function generateDailyHighlight(buttonElement) {
-                const card = buttonElement.closest('.bg-white');
-                const location = card.dataset.location;
-                const activities = card.dataset.activities;
-                const highlightOutputDiv = card.querySelector('.generated-highlight');
-
-                highlightOutputDiv.textContent = 'Generating highlight...';
-
-                const prompt = `Give me a single, exciting highlight for a day visiting ${location} and doing ${activities}. Keep it very concise, under 20 words, and start with an action verb.`;
-                const highlight = await callGeminiAPI(prompt);
-                highlightOutputDiv.textContent = highlight;
-            }
-
-            async function generateCulturalInsight(region, outputDivId) {
-                const outputDiv = document.getElementById(outputDivId);
-                outputDiv.classList.remove('hidden');
-                outputDiv.textContent = 'Generating cultural insight...';
-
-                const prompt = `Provide one concise cultural tip or etiquette guideline for travelers in ${region} of Vietnam. Focus on something practical and under 30 words.`;
-                const insight = await callGeminiAPI(prompt);
-                outputDiv.textContent = insight;
             }
             
             activateTab('overview');
