@@ -88,7 +88,7 @@
         </nav>
 
         <main id="tab-content">
-            <section id="overview" class="content-section">
+            <section id="overview" class="content-section active">
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
                     <h2 class="text-2xl font-bold text-slate-800 mb-4 text-center">Trip at a Glance</h2>
                     <p class="text-center text-slate-600 mb-8 max-w-3xl mx-auto">This 21-day journey is an adventure from the mountainous north to the vibrant south, blending cultural immersion, historical exploration, and breathtaking natural beauty. This overview provides a high-level look at the trip's structure, key stats, and regional time allocation to help you visualize the entire adventure.</p>
@@ -437,7 +437,7 @@
               });
               // Initialize the map after overview tab becomes visible
               if (tabName === 'overview') {
-                setTimeout(initVietnamMap, 100); // slight delay ensures div is visible
+                setTimeout(initVietnamMap, 300); // slight delay ensures div is visible
               }
             }
 
