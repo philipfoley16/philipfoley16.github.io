@@ -423,14 +423,17 @@
             const contentSections = document.getElementById('tab-content').querySelectorAll('.content-section');
             const tabs = tabNavigation.querySelectorAll('.tab-btn');
 
-            function activateTab(tabName) {
-                tabs.forEach(tab => {
-                    tab.classList.toggle('active', tab.dataset.tab === tabName);
-                });
-
-                contentSections.forEach(section => {
-                    section.classList.toggle('active', section.id === tabName);
-                });
+          function activateTab(tabName) {
+              tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+              });
+              contentSections.forEach(section => {
+                section.classList.toggle('active', section.id === tabName);
+              });
+              // Initialize the map after overview tab becomes visible
+              if (tabName === 'overview') {
+                setTimeout(initVietnamMap, 100); // slight delay ensures div is visible
+              }
             }
 
             tabNavigation.addEventListener('click', (e) => {
@@ -543,34 +546,28 @@
             }
             
             activateTab('overview');
+            let mapInitialized = false;
+            function initVietnamMap() {
+              if (mapInitialized) return;
+              mapInitialized = true;
+              var map = L.map('vietnam-map').setView([16.0471, 108.2068], 6);
+              L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              }).addTo(map);
+              var locations = [
+                { name: "Hanoi", lat: 21.0285, lng: 105.8542 },
+                { name: "Ha Giang", lat: 22.8233, lng: 104.9836 },
+                { name: "Halong Bay", lat: 20.9101, lng: 107.1839 },
+                { name: "Hue", lat: 16.4637, lng: 107.5909 },
+                { name: "Hoi An", lat: 15.8801, lng: 108.3380 },
+                { name: "Ho Chi Minh City", lat: 10.7769, lng: 106.7009 }
+              ];
+              locations.forEach(function(loc) {
+                L.marker([loc.lat, loc.lng]).addTo(map).bindPopup('<b>' + loc.name + '</b>');
+              });
+            }
             renderDaysPerRegionChart();
         });
     </script>
-    <script>
-  // Center roughly on Vietnam
-  var map = L.map('vietnam-map').setView([16.0471, 108.2068], 6);
-
-  // Add OpenStreetMap tiles
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-
-  // Itinerary locations
-  var locations = [
-    { name: "Hanoi", lat: 21.0285, lng: 105.8542 },
-    { name: "Ha Giang", lat: 22.8233, lng: 104.9836 },
-    { name: "Halong Bay", lat: 20.9101, lng: 107.1839 },
-    { name: "Hue", lat: 16.4637, lng: 107.5909 },
-    { name: "Hoi An", lat: 15.8801, lng: 108.3380 },
-    { name: "Ho Chi Minh City", lat: 10.7769, lng: 106.7009 }
-  ];
-
-  // Add markers
-  locations.forEach(function(loc) {
-    L.marker([loc.lat, loc.lng])
-      .addTo(map)
-      .bindPopup('<b>' + loc.name + '</b>');
-  });
-</script>
 </body>
 </html>
