@@ -344,6 +344,32 @@
                             <li class="flex items-start"><span class="mr-2 pt-1">🏛️</span><div>Explore the Imperial City & Forbidden Purple City.</div></li>
                             <li class="flex items-start"><span class="mr-2 pt-1">🛶</span><div>Dragon boat on Perfume River to Thien Mu Pagoda & Royal Tombs.</div></li>
                         </ul>
+                         <div id="weather"></div>
+                            <script>
+                              const latitude = 16.463932;
+                              const longitude = 107.586339;
+                              const targetDate = "2025-07-08"; // YYYY-MM-DD
+                            
+                              fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&timezone=auto&start_date=${targetDate}&end_date=${targetDate}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                  const weather = data.daily;
+                                  if (weather && weather.temperature_2m_max && weather.temperature_2m_max.length) {
+                                    document.getElementById('weather').innerHTML = `
+                                      <h3>Weather in Hue on ${targetDate}:</h3>
+                                      <p>Max: ${weather.temperature_2m_max[0]}°C</p>
+                                      <p>Min: ${weather.temperature_2m_min[0]}°C</p>
+                                      <p>Precipitation: ${weather.precipitation_sum[0]} mm</p>
+                                    `;
+                                  } else {
+                                    document.getElementById('weather').innerHTML = 'No forecast available for this date.';
+                                  }
+                                })
+                                .catch(error => {
+                                  document.getElementById('weather').innerHTML = 'Error fetching weather data.';
+                                  console.error(error);
+                                });
+                            </script>
                     </div>
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-100" data-location="Hue to Hoi An" data-activities="Travel via the scenic Hai Van Pass. Arrive and explore the enchanting Ancient Town of Hoi An.">
                         <h3 class="font-bold text-slate-800">Day 13: Hue to Hoi An</h3>
