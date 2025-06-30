@@ -61,6 +61,11 @@
                 height: 288px; /* sm:h-72 */
             }
         }
+        #vietnam-map {
+          min-height: 400px;
+          height: 500px;
+          z-index: 1;
+        }
     </style>
 </head>
 <body class="text-slate-700">
@@ -565,6 +570,7 @@
               locations.forEach(function(loc) {
                 L.marker([loc.lat, loc.lng]).addTo(map).bindPopup('<b>' + loc.name + '</b>');
               });
+            map.invalidateSize();
             }
             renderDaysPerRegionChart();
         });
